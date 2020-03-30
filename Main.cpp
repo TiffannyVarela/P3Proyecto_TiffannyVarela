@@ -17,9 +17,6 @@ namespace fs = std::experimental::filesystem;
 
 bool limpiar(char*);//
 bool listar(char*);//
-bool ingresar(char*);//entra dentro de la misma. no cruzadas
-bool volver(char*);
-bool eliminar(char*);//
 bool crearCarpeta(char*);//
 bool crearArchivo(char*);//
 bool escribir(char*);//este escribe en chino una vez de por medio
@@ -59,6 +56,7 @@ bool is_file(string file)
 
 int font=2,back=0;
 ofstream outfile;
+
 string direccion=fs::current_path().generic_string();
 
 int main(int argc, char const *argv[])
@@ -76,6 +74,8 @@ int main(int argc, char const *argv[])
 	const char*  user=u.c_str();
 	const char* maquina=m.c_str(); 
 	const char* direc=direccion.c_str();
+	vector <string> listaDir;
+	listaDir.push_back(direccion);
 	
 	char c; 
 	initscr();
@@ -105,22 +105,92 @@ int main(int argc, char const *argv[])
 			if (listar(p)){}
 		}
 		
-		if (ingresar(p)){}
-		if (volver(p)){}
-
-		if (p[0]=='d' && p[1]=='e')
+		/*if (p[0]=='c' && p[1]=='d')
 		{
 			string nombre="";
-			if (eliminar(p)){
+			string lista="";
+			string directorios="";
+			string nuevo="";
+			for (int i = 3; i < sizeof(p); i++)
+			{
+				nombre+=p[i];
+			}
+			if (is_dir(nombre)){
+				DIR * directorio;
+				struct dirent * elemento;
+				string elem;
+				for (int i = 0; i < listaDir.size(); i++)
+				{
+					if (i < listaDir.size()-1)
+					{
+						direccion+="/";
+					}
+					direccion+=nombre;
+				}
+				nuevo+="/"+nombre;
+				listaDir.push_back(nuevo);
+				if (directorio = opendir(direccion.c_str()))
+				{ 
+					while (elemento = readdir(directorio))
+					{
+				 		elem = elemento->d_name;
+				 		//lista=lista+elem+"\n";
+				 		if (is_dir(elem)) directorios=directorios+elem+"\n";
+	  					else if (is_file(elem)) lista=lista+elem+"\n";
+						
+					}            
+				}
+				addstr(lista.c_str());
+			}
+  			else addstr("Elemento no existe\n");
+				
+			refresh();
+		}
+		
+
+		if (p[0]=='c' && p[1]=='d'&& p[1]=='/')
+		{
+			string nombre="";
+			string lista="";
+			string directorios="";
+			string nuevo="";
+			listaDir.erase(listaDir.begin()+listaDir.size());
+			DIR * directorio;
+				struct dirent * elemento;
+				string elem;
+				direccion=direccion+"/"+nombre;
+				for (int i = 0; i < listaDir.size(); i++)
+				{
+					direccion+=listaDir[i];
+				}
+				if (directorio = opendir(direccion.c_str()))
+				{ 
+					while (elemento = readdir(directorio))
+					{
+				 		elem = elemento->d_name;
+				 		//lista=lista+elem+"\n";
+				 		if (is_dir(elem)) directorios=directorios+elem+"\n";
+	  					else if (is_file(elem)) lista=lista+elem+"\n";
+						
+					}            
+				}
+				addstr(lista.c_str());
+		}*/
+
+		if (p[0]=='d' && p[1]=='e'&&p[2]=='l'&&p[3]==' ')
+		{
+			fs::path dir = fs::temp_directory_path();
+			string nombre="";
+			if (is_dir(nombre) || is_file(nombre)){
 				for (int i = 4; i < sizeof(p); i++)
 				{
 					nombre+=p[i];
 				}
-				if (is_dir(nombre)) fs::remove_all(nombre);
-  				else addstr("Elemento no existe\n");
-				
+				fs::remove_all(dir/nombre);
 				refresh();
-				
+			}
+			else{
+				addstr("El elemento no existe\n"); 
 			}
 		}
 		
@@ -295,7 +365,6 @@ bool listar(char* x){
 		
 		string lista="";
 		string directorios="";
-		const char* listac;
 		if (x[0]=='l'&&x[1]=='s')
 		{
 			
@@ -327,27 +396,6 @@ bool listar(char* x){
 			attrset(COLOR_PAIR(4));
 			refresh();
 			closedir(directorio);
-		}
-	}
-}
-
-
-bool ingresar(char* x){
-
-}
-
-
-bool volver(char* x){
-
-}
-
-
-bool eliminar(char* x){
-	if (sizeof(x)>=5)
-	{
-		if (x[0]=='d'&&x[1]=='e'&&x[2]=='l'&&x[3]==' ')
-		{
-			
 		}
 	}
 }
